@@ -84,11 +84,6 @@
       return;
     }
 
-    if (!/^[a-z0-9._-]{3,20}$/.test(username)) {
-      showMessage("Use 3-20 letters, numbers, dot, dash, or underscore.", "error");
-      return;
-    }
-
     const attempts = getAttempts();
     const lockInfo = attempts[username] || { count: 0, lockUntil: 0 };
     if (lockInfo.lockUntil && Date.now() < lockInfo.lockUntil) {

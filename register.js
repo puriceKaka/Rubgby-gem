@@ -108,11 +108,6 @@
       return;
     }
 
-    if (!/^[a-z0-9._-]{3,20}$/.test(username)) {
-      showMessage("Username must be 3-20 chars (letters/numbers ._-).", "error");
-      return;
-    }
-
     if (!/^\+?\d{10,15}$/.test(phone)) {
       showMessage("Enter a valid phone number (10 to 15 digits).", "error");
       return;
