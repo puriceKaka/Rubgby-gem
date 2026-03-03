@@ -1,4 +1,6 @@
 (function () {
+  const SESSION_MAX_AGE_MS = 1000 * 60 * 60 * 12;
+
   const form = document.getElementById("registerForm");
   const usernameInput = document.getElementById("username");
   const phoneInput = document.getElementById("phone");
@@ -10,9 +12,44 @@
   const closeTermsBtn = document.getElementById("closeTermsBtn");
   const message = document.getElementById("registerMessage");
 
+  if (!form || !usernameInput || !phoneInput || !passwordInput || !confirmPasswordInput || !termsInput || !message) {
+    return;
+  }
+
+  function normalizeUsername(value) {
+    return String(value || "").trim().toLowerCase();
+  }
+
   function showMessage(text, type) {
     message.textContent = text;
     message.className = "message " + type;
+  }
+
+  function getUsers() {
+    return JSON.parse(localStorage.getItem("rugbyGemUsers") || "[]");
+  }
+
+  function saveUsers(users) {
+    localStorage.setItem("rugbyGemUsers", JSON.stringify(users));
+  }
+
+  function isSessionValid() {
+    const currentUser = localStorage.getItem("rugbyGemCurrentUser");
+    const sessionAt = Number(localStorage.getItem("rugbyGemSessionAt"));
+    if (!currentUser || !sessionAt) {
+      return false;
+    }
+    return Date.now() - sessionAt <= SESSION_MAX_AGE_MS;
+  }
+
+  async function sha256(text) {
+    if (!window.crypto || !window.crypto.subtle) {
+      return "plain:" + text;
+    }
+    const data = new TextEncoder().encode(text);
+    const hashBuffer = await window.crypto.subtle.digest("SHA-256", data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(function (b) { return b.toString(16).padStart(2, "0"); }).join("");
   }
 
   function openTermsModal() {
@@ -29,6 +66,11 @@
     }
     termsModal.classList.remove("visible");
     termsModal.setAttribute("aria-hidden", "true");
+  }
+
+  if (isSessionValid()) {
+    window.location.replace("home.html");
+    return;
   }
 
   if (viewTermsBtn) {
@@ -53,10 +95,10 @@
     }
   });
 
-  form.addEventListener("submit", function (event) {
+  form.addEventListener("submit", async function (event) {
     event.preventDefault();
 
-    const username = usernameInput.value.trim().toLowerCase();
+    const username = normalizeUsername(usernameInput.value);
     const phone = phoneInput.value.trim().replace(/\s+/g, "");
     const password = passwordInput.value;
     const confirmPassword = confirmPasswordInput.value;
@@ -66,8 +108,8 @@
       return;
     }
 
-    if (username.length < 3) {
-      showMessage("Username must be at least 3 characters.", "error");
+    if (!/^[a-z0-9._-]{3,20}$/.test(username)) {
+      showMessage("Username must be 3-20 chars (letters/numbers ._-).", "error");
       return;
     }
 
@@ -76,8 +118,8 @@
       return;
     }
 
-    if (password.length < 6) {
-      showMessage("Password must be at least 6 characters.", "error");
+    if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,64}$/.test(password)) {
+      showMessage("Password needs 8+ chars with uppercase, lowercase, number, and symbol.", "error");
       return;
     }
 
@@ -91,9 +133,9 @@
       return;
     }
 
-    const users = JSON.parse(localStorage.getItem("rugbyGemUsers") || "[]");
+    const users = getUsers();
     const exists = users.some(function (user) {
-      const storedUsername = (user.username || user.fullName || user.email || "").trim().toLowerCase();
+      const storedUsername = normalizeUsername(user.username || user.fullName || user.email);
       return storedUsername === username || user.phone === phone;
     });
 
@@ -102,20 +144,21 @@
       return;
     }
 
+    const passwordHash = await sha256(password);
     users.push({
       username: username,
       fullName: username,
       phone: phone,
-      password: password,
+      passwordHash: passwordHash,
       createdAt: new Date().toISOString()
     });
 
-    localStorage.setItem("rugbyGemUsers", JSON.stringify(users));
+    saveUsers(users);
     showMessage("Registration complete. Redirecting to login...", "success");
     form.reset();
 
     setTimeout(function () {
-      window.location.href = "login.html";
+      window.location.replace("login.html");
     }, 1200);
   });
 })();

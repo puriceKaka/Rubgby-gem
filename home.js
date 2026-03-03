@@ -1,4 +1,5 @@
 (function () {
+  const SESSION_MAX_AGE_MS = 1000 * 60 * 60 * 12;
   const layout = document.getElementById("portalLayout");
   const toggle = document.getElementById("menuToggle");
   const sidebar = document.querySelector(".sidebar");
@@ -46,8 +47,18 @@
   }
 
   const currentUser = localStorage.getItem("rugbyGemCurrentUser");
-  const rememberedUser = localStorage.getItem("rugbyGemRememberedUsername");
-  const activeUser = currentUser || rememberedUser || "";
+  const sessionAt = Number(localStorage.getItem("rugbyGemSessionAt"));
+
+  if (!currentUser || !sessionAt || Date.now() - sessionAt > SESSION_MAX_AGE_MS) {
+    localStorage.removeItem("rugbyGemCurrentUser");
+    localStorage.removeItem("rugbyGemSessionAt");
+    window.location.replace("login.html");
+    return;
+  }
+
+  localStorage.setItem("rugbyGemSessionAt", String(Date.now()));
+
+  const activeUser = currentUser;
   const activeUserNormalized = activeUser.toLowerCase();
   function formatDisplayName(value) {
     return String(value || "")
@@ -206,8 +217,11 @@
   });
 
   if (logoutLink) {
-    logoutLink.addEventListener("click", function () {
+    logoutLink.addEventListener("click", function (event) {
+      event.preventDefault();
       localStorage.removeItem("rugbyGemCurrentUser");
+      localStorage.removeItem("rugbyGemSessionAt");
+      window.location.replace("login.html");
     });
   }
 

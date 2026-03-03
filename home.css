@@ -689,16 +689,109 @@ img {
   background: #f8fafc;
 }
 
-@media (max-width: 1100px) {
-  body {
-    overflow-x: auto;
-  }
-
+@media (min-width: 1024px) {
   .portal-layout {
-    min-width: 1100px;
+    grid-template-columns: 250px 1fr;
   }
 
+  .sidebar {
+    left: 0;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+  }
+
+  .menu-toggle {
+    display: none;
+  }
+}
+
+@media (max-width: 1023px) {
   .content {
-    padding: 20px;
+    padding: 16px;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, minmax(150px, 1fr));
+  }
+
+  .dashboard-samples {
+    grid-template-columns: repeat(2, minmax(140px, 1fr));
+  }
+
+  .fixtures-columns {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .content {
+    padding: 12px;
+  }
+
+  .topbar {
+    flex-wrap: wrap;
+    align-items: flex-start;
+    padding: 12px;
+  }
+
+  .topbar-left {
+    width: 100%;
+  }
+
+  .portal-title h2 {
+    font-size: 1rem;
+  }
+
+  .user-pill {
+    width: 100%;
+    justify-content: center;
+    font-size: 0.82rem;
+    padding: 7px 10px;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-samples {
+    grid-template-columns: 1fr;
+  }
+
+  .payment-grid {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .pay-btn {
+    width: 100%;
+  }
+
+  .days-row {
+    grid-template-columns: 65px 1fr 45px;
+  }
+
+  .card,
+  .panel {
+    padding: 12px;
+  }
+}
+
+@media (max-width: 420px) {
+  .sidebar {
+    width: 88vw;
+    left: -92vw;
+  }
+
+  .menu-item {
+    font-size: 0.88rem;
+    padding: 9px;
+  }
+
+  .profile-grid input,
+  .payment-grid input,
+  .payment-grid select,
+  .complaint-form textarea {
+    font-size: 16px;
   }
 }
