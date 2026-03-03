@@ -689,136 +689,16 @@ img {
   background: #f8fafc;
 }
 
-@media (max-width: 900px) {
-  .stats-grid {
-    grid-template-columns: 1fr;
+@media (max-width: 1100px) {
+  body {
+    overflow-x: auto;
   }
 
-  .dashboard-samples {
-    grid-template-columns: 1fr;
-  }
-
-  .topbar {
-    align-items: flex-start;
-  }
-
-  .user-pill {
-    font-size: 0.82rem;
-    padding: 7px 10px;
-  }
-
-  .payment-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .fixtures-columns {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 768px) {
-  .topbar {
-    flex-wrap: wrap;
-    padding: 12px;
-  }
-
-  .topbar-left {
-    width: 100%;
-  }
-
-  .portal-title h2 {
-    font-size: 1.02rem;
-  }
-
-  .user-pill {
-    width: 100%;
-    justify-content: center;
-  }
-
-  .card,
-  .panel {
-    padding: 12px;
-  }
-
-  .days-row {
-    grid-template-columns: 70px 1fr 45px;
-  }
-
-  .payment-grid {
-    gap: 6px;
-  }
-
-  .pay-btn {
-    width: 100%;
-  }
-}
-
-@media (max-width: 540px) {
-  .content {
-    padding: 12px;
-  }
-
-  .topbar h2 {
-    font-size: 1rem;
-  }
-
-  .card p,
-  .section-note,
-  .profile-grid label,
-  .payment-grid label {
-    font-size: 0.84rem;
-  }
-
-  .card h3 {
-    font-size: 1.1rem;
-  }
-
-  .profile-grid input,
-  .payment-grid input,
-  .payment-grid select,
-  .complaint-form textarea {
-    font-size: 16px;
-  }
-
-  .payment-table,
-  .fixture-table,
-  .training-table,
-  .performance-table {
-    min-width: 500px;
-  }
-
-  .days-name,
-  .days-value {
-    font-size: 0.76rem;
-  }
-}
-
-@media (max-width: 420px) {
-  .sidebar {
-    width: 86vw;
-    left: -88vw;
-    padding: 16px 12px;
+  .portal-layout {
+    min-width: 1100px;
   }
 
   .content {
-    padding: 10px;
-  }
-
-  .topbar {
-    padding: 10px;
-  }
-
-  .portal-title h2 {
-    max-width: 170px;
-  }
-
-  .menu-item {
-    padding: 9px;
-    font-size: 0.88rem;
-  }
-
-  .card,
-  .panel {
-    padding: 10px;
+    padding: 20px;
   }
 }
